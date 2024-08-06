@@ -43,8 +43,8 @@ function serialize(rmsg) {
         // TODO: Implement functionality to read group metadata
     }
 
-    let proto = rmsg.message.protocolMessage;
-    let msg = proto?.editedMessage || rmsg.message;
+    let edited = rmsg.message.editedMessage?.message?.protocolMessage;
+    let msg = edited?.editedMessage || rmsg.message;
     m.type = getMessageType(msg);
     msg = m.type == 'conversation' ? msg : msg[m.type];
     if (!msg) return;
@@ -58,8 +58,8 @@ function serialize(rmsg) {
         m.url = (body.match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi) || [])[0] || '';
     }
 
-    if (proto?.editedMessage) {
-        msg = getMessage(m.chat.toString(), proto.key.id).message || proto.editedMessage;
+    if (edited?.editedMessage) {
+        msg = getMessage(m.chat.toString(), edited.key.id).message || edited.editedMessage;
         msg = msg[getMessageType(msg)];
     }
 
