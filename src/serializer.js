@@ -83,13 +83,17 @@ function serialize(rmsg) {
                 pushName: userName[ctx.participant]
             };
             msg = getMessage(m.quoted.key.remoteJid, ctx.stanzaId);
+            console.log(msg)
             msg = msg.message ? msg : { message: ctx.quotedMessage };
             m.quoted.timestamp = msg.messageTimestamp || 0;
             let type = getMessageType(msg.message);
             msg = msg.message[type];
             m.quoted.mimetype = msg.mimetype || 'text/plain';
-            m.quoted.text = msg.text || msg.caption || msg;
-            m.quoted.url = (m.quoted.text?.match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi) || [])[0] || '';
+            m.quoted.text = typeof msg === 'string' ? msg : msg.text || msg.caption || '';
+            console.log('\n---------------------------------')
+            console.log(msg.text)
+            console.log(m.quoted)
+            m.quoted.url = (m.quoted.text.match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi) || [])[0] || '';
             m.quoted[type] = msg;
             if (msg.mimetype || msg.thumbnailDirectPath) {
                 m.quoted.download = function download() { return downloadMediaMessage({ message: m.quoted }, 'buffer', { reuploadRequest: bot.updateMediaMessage }); };
