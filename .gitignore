@@ -1,0 +1,28 @@
+# Node.js specific
+node_modules/
+
+# Cache directory
+.config
+.npm
+.pm2
+
+# Optional REPL history
+.node_repl_history
+
+# dotenv environment variables file
+.env
+
+# IDE specific
+.vscode/
+.idea/
+.DS_Store
+
+# Config file
+config.js
+
+# Data directory
+data/
+
+# Temporary files
+run.js
+tmp/
