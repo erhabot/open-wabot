@@ -125,16 +125,30 @@ function serialize(rmsg) {
                     }
 
                     if (msg.image || msg.video || msg.document) {
-                        msg.caption = content;
+                        if (msg.text) {
+                            msg.caption += ' ' + content
+                        } else {
+                            msg.caption = content;
+                        }
                     } else if (!msg.audio && !msg.sticker) {
-                        msg.text = content;
+                        if (msg.text) {
+                            msg.text += ' ' + content
+                        } else {
+                            msg.text = content;
+                        }
                     }
                     break;
 
                 case (Buffer.isBuffer(content)):
                     const { fileTypeFromBuffer } = await import('file-type');
                     const { mime, ext } = await fileTypeFromBuffer(content);
+                    if (msg.text) {
+                        msg.caption = msg.text;
+                        delete msg.text;
+                    }
+
                     if (mime === 'image/webp') {
+                        delete msg.caption;
                         msg.sticker = content;
                     } else if (mime.startsWith('image')) {
                         msg.image = content;
