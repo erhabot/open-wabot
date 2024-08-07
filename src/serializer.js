@@ -2,7 +2,6 @@ const { downloadMediaMessage } = require('baileys');
 const { getMessage } = require('./store.js');
 const { generateID } = require('./util.js')
 const config = require('../config');
-const axios = require("axios")
 
 let recentId = {};
 let userName = {};
