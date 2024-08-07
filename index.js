@@ -70,8 +70,20 @@ async function connect() {
             case 'close':
                 if (lastDisconnect?.error?.output?.statusCode === DisconnectReason.loggedOut) {
                     log.error('Disconnected: Logged out!');
-                    sysdb.save(); // Save system data
-                    process.send('unauthorized'); // Send unauthorized signal to parent process
+                    try {
+                        process.send('unauthorized'); // Send unauthorized signal to parent process
+                    } catch {
+                        process.exit(1); // Stopping process with error
+                        // I do not handle logout the same as in the controller because users
+                        // running this app without a controller may use PM2 or a panel. When
+                        // the session is deleted and the bot restarts, it will request a new
+                        // QR code or login code. This can cause spam if not handled promptly
+                        // by the administrator.
+
+                        // I chose to terminate with code 1 so the bot is considered crashed.
+                        // When restarted by PM2, it will crash again due to the old session,
+                        // causing PM2 to stop the restart cycle, considering the app erroneous.
+                    }
                     return;
                 }
                 log.error(`Disconnected: ${lastDisconnect?.error?.output?.message}`);
