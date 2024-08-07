@@ -12,19 +12,15 @@ function getMessageType(content) {
 }
 
 function parseMention(text) {
-       if (typeof text === 'string') {
-          let matches = text.matchAll(/@([0-9]{5,16}|0)/g);
-          if (matches !== null) {
-             return [...matches].map(v => v[1] + '@s.whatsapp.net') || [];
-          }
+    if (typeof text === 'string') {
+       let matches = text.matchAll(/@([0-9]{5,16}|0)/g);
+       if (matches !== null) {
+          return [...matches].map(v => v[1] + '@s.whatsapp.net') || [];
        }
-       return [];
-    }   
-function isUrl(text) {
-        const regex = new RegExp(/((http|https|ftp):\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/, 'gi');
-        const matches = text?.match(regex) || [];
-        return matches.length > 0 ? matches : false;
     }
+    return [];
+ } 
+
 /**
  * Serializes a message object to extract relevant details.
  *
@@ -72,8 +68,8 @@ function serialize(rmsg) {
         m.url = (body.match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi) || [])[0] || '';
     }
 
-    if (proto?.editedMessage) {
-        msg = getMessage(m.chat.toString(), proto.key.id).message || proto.editedMessage;
+    if (edited?.editedMessage) {
+        msg = getMessage(m.chat.toString(), edited.key.id).message || edited.editedMessage;
         msg = msg[getMessageType(msg)];
     }
 
@@ -104,9 +100,6 @@ function serialize(rmsg) {
             msg = msg.message[type];
             m.quoted.mimetype = msg.mimetype || 'text/plain';
             m.quoted.text = typeof msg === 'string' ? msg : msg.text || msg.caption || '';
-            console.log('\n---------------------------------')
-            console.log(msg.text)
-            console.log(m.quoted)
             m.quoted.url = (m.quoted.text.match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi) || [])[0] || '';
             m.quoted[type] = msg;
             if (msg.mimetype || msg.thumbnailDirectPath) {
@@ -114,106 +107,61 @@ function serialize(rmsg) {
             }
         }
     }
-    m.reply = async function reply(...args) {
-        let buffer, text, options, contents;
-      
-        if (args.length === 1) {
-          // Case: m.reply("text")
-          if (typeof args[0] === 'string') {
-            text = args[0];
-            return bot.sendMessage(m.chat.toString(), { text });
-          } else {
-            // Case: m.reply({...options, ...contents})
-            contents = args[0];
-            options = contents;
-            return bot.sendMessage(m.chat.toString(), options);
-          }
-        } else if (args.length === 2) {
-          // Case: m.reply(buffer, "string")
-          if (Buffer.isBuffer(args[0])) {
-            buffer = args[0];
-            text = args[1];
-            const { fileTypeFromBuffer } = await import('file-type');
-            const type = await fileTypeFromBuffer(buffer);
-            if (type.mime.startsWith('image')) {
-              return bot.sendMessage(m.chat.toString(), { image: buffer, caption: text });
-            } else if (type.mime.startsWith('video')) {
-              return bot.sendMessage(m.chat.toString(), { video: buffer, caption: text });
-            } else if (type.mime.startsWith('audio')) {
-              return bot.sendMessage(m.chat.toString(), { audio: buffer, mimetype: type.mime, caption: text });
-            }
-          } else {
-            // Case: m.reply({...options, ...contents}, "string")
-            contents = args[0];
-            options = contents;
-            text = args[1];
-            return bot.sendMessage(m.chat.toString(), { ...options, caption: text });
-          }
-        } else if (args.length === 3) {
-          // Case: m.reply(buffer, "string", {...options, ...contents})
-          buffer = args[0];
-          text = args[1];
-          contents = args[2];
-          options = contents;
-          const { fileTypeFromBuffer } = await import('file-type');
-          const type = await fileTypeFromBuffer(buffer);
-          if (type.mime.startsWith('image')) {
-            return bot.sendMessage(m.chat.toString(), { ...options, image: buffer, caption: text });
-          } else if (type.mime.startsWith('video')) {
-            return bot.sendMessage(m.chat.toString(), { ...options, video: buffer, caption: text });
-          } else if (type.mime.startsWith('audio')) {
-            return bot.sendMessage(m.chat.toString(), { ...options, audio: buffer, mimetype: type.mime, caption: text });
-          }
-        }
-      
-        let msg = {
-          mentions: [m.sender.toString(), ...parseMention(text || '')]
-        };
-      
-        if (buffer) {
-          const { fileTypeFromBuffer } = await import('file-type');
-          const type = await fileTypeFromBuffer(buffer);
-          if (type.mime.startsWith('image')) {
-            msg.image = buffer;
-          } else if (type.mime.startsWith('video')) {
-            msg.video = buffer;
-          } else if (type.mime.startsWith('audio')) {
-            msg.audio = buffer;
-            msg.mimetype = type.mime;
-          }
-        }
-      
-        if (text) {
-          if (args.length === 1) {
-            msg.text = text;
-          } else {
-            if (msg.image || msg.video || (options && options.contents)) {
-              msg.caption = text;
-            } else {
-              msg.text = text;
-            }
-          }
-        }
-      
-        if (contents) {
-            
-          Object.assign(msg, contents);
-        }
-      
-        options = {
-          ...options,
-          quoted: rmsg,
-          getUrlInfo: false,
-          ephemeralExpiration: m.expiration,
-          messageId: generateID(24, '0SW4'),
-          ...msg
-        };
-      
-        return bot.sendMessage(m.chat.toString(), buffer || msg, options);
-      };
 
+    m.reply = async function reply(...contents) {
+        let msg = {}
+        let opt = {
+            quoted: rmsg,
+            getUrlInfo: false,
+            ephemeralExpiration: m.expiration,
+            messageId: generateID(24, '0SW8')
+        }
+        for (let content of contents) {
+            switch (true) {
+                case (typeof content === 'string'):
+                    let mentions = parseMention(content);
+                    if (mentions) {
+                        msg.mentions = mentions
+                    }
+
+                    if (msg.image || msg.video || msg.document) {
+                        msg.caption = content;
+                    } else if (!msg.audio && !msg.sticker) {
+                        msg.text = content;
+                    }
+                    break;
+
+                case (Buffer.isBuffer(content)):
+                    const { fileTypeFromBuffer } = await import('file-type');
+                    const { mime, ext } = await fileTypeFromBuffer(content);
+                    if (mime === 'image/webp') {
+                        msg.sticker = content;
+                    } else if (mime.startsWith('image')) {
+                        msg.image = content;
+                    } else if (mime.startsWith('video')) {
+                        msg.video = content;
+                    } else if (mime.startsWith('audio')) {
+                        msg.audio = content;
+                        msg.mimetype = 'audio/mpeg';
+                    } else {
+                        msg.mimetype = mime;
+                        msg.document = content;
+                        msg.fileName = `${ generateID(12, 'OWB_') }.${ext}`;
+                    }
+                    break;
+
+                case (typeof content === 'object'):
+                    Object.assign(opt, content)
+                    break;
+
+                default:
+                    throw new Error('unsupported typedata');
+            }
+        }
+
+        return bot.sendMessage(m.chat.toString(), msg, opt);
+    }
     return m;
-    
 }
 
 module.exports = { serialize }
