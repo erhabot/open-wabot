@@ -68,39 +68,52 @@ module.exports = {
 
     // Informasi bot
     botName: "Open WABOT", // Nama bot
-    botNumber: "62816549769011", // Nomor telepon bot
+    botNumber: "6285176765422", // Nomor telepon bot
 
     // Daftar administrator
     administrator: [
         "6281654976901", // Nomor telepon administrator pertama
-        "6285175023775"  // Nomor telepon administrator kedua
+        "6285175023755"  // Nomor telepon administrator kedua
     ],
 
     // Konfigurasi whitelist
     whitelist: false, // Setel ke true untuk mengaktifkan fitur whitelist
+    whitelistSrv: "http://localhost:8080/whitelist", // Server yang menyediakan daftar putih
+    whitelistMsg: "You are not allowed to use this bot", // Pesan yang dikirim kepada pengguna saat mereka tidak ada di daftar putih
     whitelistUsr: [
-        "62816549769011" // Nomor telepon pengguna yang di-whitelist
+        "6285176765422" // Nomor telepon pengguna yang di-whitelist
     ]
 };
+```
+
+## Daftar putih
+
+Nomor yang dimasukkan kedalam array daftar putih didalam file konfigurasi bersifat permanen hingga file konfigurasi diubah. Jika ada ingin menambahkan whitelist dalam jangka waktu tertentu, anda bisa menggunakan perintah seperti berikut.
+
+```
+.whitelist <nomor> <durasi dengan satuan hari>
+
+.whitelist 6285176765422 30
+```
+
+Pada konfigurasi whitelistSrv bisa diisi dengan url server yang akan menerima dan mengembalikan data json seperti berikut.
+
+Data yang akan diterima oleh server.
+```json
+{
+    "user": "6285176765422"
+}
+```
+Data yang akan dikembalikan oleh server.
+```json
+{
+    "whitelisted": true/false
+}
 ```
 
 ## Penggunaan
 
 Jalankan bot dengan perintah `node controller.js`.
-
-## TODO
-
-- [ ] Implementasikan fitur pengunduh media sosial
-- [ ] Tambahkan dokumentasi yang komprehensif
-- [ ] Perbaiki penanganan kesalahan dan logging
-
-## Kontribusi
-
-Jika Anda ingin berkontribusi pada proyek ini, silakan ikuti panduan berikut:
-- Fork repositori ini
-- Buat branch baru
-- Lakukan perubahan dan commit
-- Push ke branch dan buat pull request
 
 ## Menambahkan Plugin
 
@@ -108,12 +121,12 @@ Untuk menambahkan plugin, silakan gunakan format berikut:
 
 ```js
 module.exports = {
-    admin: false,
-    name: 'name',
-    alias: ['alias1', 'alias2'],
-    category: 'test',
+    admin: false, // Apakah plugin khusus administrator
+    name: 'name', // Nama fitur yang ditambahkan
+    alias: ['alias1', 'alias2'], // Nama lain dari fitur bisa digunakan sebagai perintah alternatif
+    category: 'test', // Kategori dari fitur yang ditambahkan
     run: async (m, plugins) => {
-        // Here is your code
+        // Disini kodemu dijalankan
         m.reply(result)
     }
 }

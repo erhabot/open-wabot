@@ -1,5 +1,5 @@
-const config = require('../config.js')
-const { isWhitelist } = require('./whitelist.js')
+const config = require('../config.js');
+const { isWhitelist } = require('./whitelist.js');
 
 /**
  * Handles incoming messages and forwards them to the appropriate plugins.
@@ -13,7 +13,11 @@ const { isWhitelist } = require('./whitelist.js')
  * @param {Array} plugins - An array of plugin functions or objects that will handle the message.
  */
 async function message(log, m, plugins) {
-    if (!isWhitelist(m.sender.user)) return
+    if (!m.prefix) return;
+    if (!isWhitelist(m.sender.user)) {
+        if (!m.isGroup) m.reply(config.whitelistMsg);
+        return;
+    }
     
     for (let plugin of plugins) {
 		plugins = plugins.filter(x => x != plugin);
@@ -29,13 +33,18 @@ async function message(log, m, plugins) {
     const administrator = !!config.administrator.find(x => x == m.sender.user);
 
     for (let plugin of plugins) {
-        if (!m.prefix) return;
         if (![plugin?.name, ...plugin?.alias].includes(m.cmd)) continue;
         bot.sendPresenceUpdate('composing', m.chat.toString());
         if (plugin.admin && !administrator) return m.reply('⚠️ This feature only for administrator!');
         try {
-            plugin.run(m, plugins)
+            await plugin.run(m, plugins)
         } catch (e) {
+            bot.sendMessage(m.chat.toString(), {
+                react: {
+                    text: '❌',
+                    key: m.key,
+                  }
+            })
             log.error(`Error executing plugin: ${e}`)
         }
     }

@@ -68,20 +68,48 @@ module.exports = {
 
     // Bot information
     botName: "Open WABOT", // Name of the bot
-    botNumber: "62816549769011", // Phone number of the bot
+    botNumber: "6285176765422", // Phone number of the bot
 
     // Administrators list
     administrator: [
         "6281654976901", // Phone number of the first administrator
-        "6285175023775"  // Phone number of the second administrator
+        "6285175023755"  // Phone number of the second administrator
     ],
 
     // Whitelist configuration
     whitelist: false, // Set to true to enable whitelist feature
+    whitelistSrv: "http://localhost:8080/whitelist", // Servers that provide whitelists
+    whitelistMsg: "You are not allowed to use this bot", // Messages to be sent to users when they are not allowed to use bots 
     whitelistUsr: [
-        "62816549769011" // Phone number of the whitelisted user
+        "6285176765422" // Phone number of the whitelisted user
     ]
 };
+```
+
+## Whitelist
+
+The numbers entered into the whitelist array in the configuration file are permanent until the configuration file is changed. If you want to add a whitelist within a certain period of time, you can use the following command.
+
+```
+.whitelist <phone> <duration in days>
+
+.whitelist 6285176765422 30
+```
+
+In the whitelist configuration, Srv can be filled with a server url that will receive and return json data as follows.
+
+Data to be received by the server.
+```json
+{
+    "user": "6285176765422"
+}
+```
+
+Data to be returned by the server.
+```json
+{
+    "whitelisted": true/false
+}
 ```
 
 ## Usage
@@ -91,22 +119,16 @@ Run the bot with the command
 node controller.js
 ```
 
-## TODO
-
-- [ ] Implement social media downloader feature
-- [ ] Add comprehensive documentation
-- [ ] Improve error handling and logging
-
 ## Adding Plugins
 
 To add a plugin, please use the following format:
 
 ```js
 module.exports = {
-    admin: false,
-    name: 'name',
-    alias: ['alias1', 'alias2'],
-    category: 'test',
+    admin: false, // Is the plugin administrator-only
+    name: 'name', // Added feature names
+    alias: ['alias1', 'alias2'], // Other names of the feature can be used as alternative commands
+    category: 'test', // Categories of added features
     run: async (m, plugins) => {
         // Here is your code
         m.reply(result)

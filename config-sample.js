@@ -13,17 +13,19 @@ module.exports = {
 
     // Bot information
     botName: "Open WABOT", // Name of the bot
-    botNumber: "62816549769011", // Phone number of the bot
+    botNumber: "6285176765422", // Phone number of the bot
 
     // Administrators list
     administrator: [
         "6281654976901", // Phone number of the first administrator
-        "6285175023775"  // Phone number of the second administrator
+        "6285175023755"  // Phone number of the second administrator
     ],
 
     // Whitelist configuration
     whitelist: false, // Set to true to enable whitelist feature
+    whitelistSrv: "", // Servers that provide whitelists
+    whitelistMsg: "Mohon maaf, bot sedang dalam mode daftar putih. Silahkan hubungi admin untuk mendapatkan akses.\n\nSorry, the bot is in whitelist mode. Please contact the admin to get access.\n\nADMIN: <your phone number>", // Messages to be sent to users when they are not allowed to use bots 
     whitelistUsr: [
-        "62816549769011" // Phone number of the whitelisted user
+        "6285176765422" // Phone number of the whitelisted user
     ]
 };

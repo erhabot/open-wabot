@@ -1,5 +1,8 @@
 const fs = require('fs');
+const path = require('path');
+const { post } = require('axios');
 const config = require('../config');
+const whitelistFilePath = path.join(__dirname, '..', 'data', 'whitelist.json');
 let whitelist = {};
 
 /**
@@ -12,8 +15,13 @@ let whitelist = {};
  * @param {number} expiration - The expiration timestamp for the whitelist entry (UNIX timestamp in milliseconds).
  */
 function addWhitelist(user, expiration) {
-    whitelist[user] = expiration;
-    fs.writeFileSync('../data/whitelist.json', JSON.stringify(whitelist, null, 2), 'utf8');
+    const now = Date.now()
+    if (whitelist[user] && whitelist[user] > now) {
+        whitelist[user] += expiration
+    } else {
+        whitelist[user] = expiration + now;
+    }
+    fs.writeFileSync(whitelistFilePath, JSON.stringify(whitelist, null, 0), 'utf8');
 }
 
 /**
@@ -32,13 +40,21 @@ function isWhitelist(user) {
     if (config.administrator.find(x => x == user)) return true;
     if (config.whitelistUsr.find(x => x == user)) return true;
 
+    if (config.whitelistSrv) {
+        const data = { user };
+        const whitelisted = post(config.whitelistSrv, data)
+        .then(response =>  response.data?.whitelisted)
+        .catch(() => false);
+        if (whitelisted) return true;
+    }
+
     let expTimestamp = whitelist[user];
     return (expTimestamp && expTimestamp > Date.now());
 }
 
 // Load the whitelist if whitelisting is enabled in the configuration
-if (config.whitelist && fs.existsSync('../data/whitelist.json')) {
-    Object.assign(whitelist, JSON.parse(fs.readFileSync('../data/whitelist.json')));
+if (config.whitelist && fs.existsSync(whitelistFilePath)) {
+    Object.assign(whitelist, JSON.parse(fs.readFileSync(whitelistFilePath)));
 }
 
 module.exports = {

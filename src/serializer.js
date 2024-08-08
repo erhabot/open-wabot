@@ -78,7 +78,8 @@ function serialize(rmsg) {
         m.download = function download() { return downloadMediaMessage({ rmsg }, 'buffer', { reuploadRequest: bot.updateMediaMessage })};
     }
 
-    m.message = rmsg.message
+    m.key = rmsg.key;
+    m.message = rmsg.message;
     let ctx = msg.contextInfo;
     if (ctx) {
         m.expiration = ctx.expiration || 0;
