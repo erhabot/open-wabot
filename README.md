@@ -1,3 +1,4 @@
+[![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#table-of-contents)
 # Open WABOT
 
 Open WABOT is a WhatsApp bot designed to be as lightweight as possible using the [Baileys](https://github.com/WhiskeySockets/Baileys) module.
