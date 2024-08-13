@@ -15,7 +15,7 @@ const {
 } = require('baileys');
 
 // Create a logger with configuration based on debug settings
-const log = pino(pretty({
+global.log = pino(pretty({
     colorize: true,
     minimumLevel: config.debug ? 'trace' : 'info', // Set the minimum log level
     sync: true,
@@ -111,7 +111,7 @@ async function connect() {
             log.info(`Received ${m.type} from ${m.sender.user}, at ${m.isGroup ? 'group ' : ''}${m.chat.user}${m.body ? '\nMessage: ' + m.body : ''}`)
             if (config.debug) console.log(stringify(m));
             let plugins = scanDir('./plugins')
-            message(log, m, plugins)
+            message(m, plugins)
         }
     });
 

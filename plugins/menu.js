@@ -6,7 +6,10 @@ module.exports = {
     alias: ['m'],
     category: 'info',
     run: async (m, plugins) => {
-        let text = `*<>=====[ ${config.botName} ]=====<>*\nHi *${m.name}*, here is the list of available features.`;
+        let text = `*<>=====[ ${config.botName} ]=====<>*\nHi *${m.name}*, `;
+        text += m.sender.user.startsWith('62')
+            ? 'berikut adalah daftar fitur yang tersedia.'
+            : 'here is the list of available features.'
         let categories = {}
 
         for (const plugin of plugins) {
@@ -24,6 +27,6 @@ module.exports = {
 
         // to appreciate the developer please don't lose this credit
         text += `\n\n> © 2024 - Open Source WhatsApp Bot\n> https://github.com/Ismananda/open-wabot`;
-        m.reply(text)
+        await m.reply(text)
     }
 }

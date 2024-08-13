@@ -15,9 +15,9 @@ module.exports = {
                     data = m.text.includes('return') 
                         ? await eval(`(async () => { ${m.text} })()`)
                         : await eval(`(async () => { return ${m.text} })()`);
-                    m.reply(format(data));
+                    await m.reply(format(data));
                 } catch (e) {
-                    m.reply(format(e));
+                    await m.reply(format(e));
                 }
                 break;
 
@@ -25,9 +25,9 @@ module.exports = {
             case '$':
                 if (!m.text) return;
                 await m.reply('Executing...');
-                exec(m.text, (e, s) => {
-                    if (e) m.reply(format(e));
-                    if (s) m.reply(format(s));
+                exec(m.text, async (e, s) => {
+                    if (e) await m.reply(format(e));
+                    if (s) await m.reply(format(s));
                 });
                 break;
         }

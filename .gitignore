@@ -1,4 +1,5 @@
 # Node.js specific
+package-lock.json
 node_modules/
 
 # Cache directory

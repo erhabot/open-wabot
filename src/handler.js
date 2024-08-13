@@ -12,7 +12,7 @@ const { isWhitelist } = require('./whitelist.js');
  * @param {Object} m - The message object that contains the details of the incoming message.
  * @param {Array} plugins - An array of plugin functions or objects that will handle the message.
  */
-async function message(log, m, plugins) {
+async function message(m, plugins) {
     if (!m.prefix) return;
     if (!isWhitelist(m.sender.user)) {
         if (!m.isGroup) m.reply(config.whitelistMsg);
@@ -37,7 +37,7 @@ async function message(log, m, plugins) {
         bot.sendPresenceUpdate('composing', m.chat.toString());
         if (plugin.admin && !administrator) return m.reply('⚠️ This feature only for administrator!');
         try {
-            await plugin.run(m, plugins)
+            await plugin.run(m, plugins);
         } catch (e) {
             bot.sendMessage(m.chat.toString(), {
                 react: {
@@ -45,8 +45,9 @@ async function message(log, m, plugins) {
                     key: m.key,
                   }
             })
-            log.error(`Error executing plugin: ${e}`)
+            log.error('Error executing plugin:', e);
         }
+        return;
     }
 }
 
