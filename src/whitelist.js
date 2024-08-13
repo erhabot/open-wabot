@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { post } = require('axios');
-const config = require('../config');
+const config = require('../config.js');
 const whitelistFilePath = path.join(__dirname, '..', 'data', 'whitelist.json');
 let whitelist = {};
 

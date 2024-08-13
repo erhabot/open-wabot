@@ -1,4 +1,4 @@
-const { addWhitelist } = require('../src/whitelist');
+const { addWhitelist } = require('../src/whitelist.js');
 
 module.exports = {
     admin: true,
