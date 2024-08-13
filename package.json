@@ -10,12 +10,8 @@
     "test": "node test.js",
     "start": "node controller.js",
     "clear:session": "node src/session.js",
-    "install:jimp": "npm i jimp --save-optional",
-    "install:mongo": "npm i baileys-mongodb --save-optional",
-    "install:sharp": "npm i sharp --save-optional",
-    "uninstall:jimp": "npm un jimp --no-save",
-    "uninstall:mongo": "npm un baileys-mongodb --no-save",
-    "uninstall:sharp": "npm un sharp --no-save"
+    "install:mongo": "npm i baileys-mongodb",
+    "uninstall:mongo": "npm un baileys-mongodb"
   },
   "repository": {
     "type": "git",
@@ -41,9 +37,20 @@
     "qrcode-terminal": "^0.12.0",
     "syntax-error": "^1.4.0"
   },
-  "optionalDependencies": {
+  "peerDependencies": {
     "baileys-mongodb": "^1.0.3",
     "jimp": "^0.16.13",
     "sharp": "^0.32.6"
+  },
+  "peerDependenciesMeta": {
+    "baileys-mongodb": {
+      "optional": true
+    },
+    "jimp": {
+      "optional": true
+    },
+    "sharp": {
+      "optional": true
+    }
   }
 }

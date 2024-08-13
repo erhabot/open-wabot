@@ -68,8 +68,9 @@ module.exports = {
     prefixes: ["!", ">", "$", ".", "-", "+", "?", "#", "@", "/", "&", ",", "ow!"], // Add the character you want to use as a prefix
 
     // Session configuration
-    sessions: {
-        mongodb: "", // Change with your Mongodb URL to use the Mongodb session
+    session: {
+        type: "local",  // Options: "mongodb", "local"
+        url: "mongodb://username:password@host:port/database?options" // Required for MongoDB (optional)
     },
 
     // Bot information
@@ -104,14 +105,16 @@ To use MongoDB sessions, please follow these steps:
 2. **Configure MongoDB URL**  
     Add your MongoDB URL to the configuration like this:
     ```js
-    sessions: {
-        mongodb: "mongodb://username:password@host:port/database?options",
+    session: {
+        type: "mongodb",
+        url: "mongodb://username:password@host:port/database?options",
     },
     ```
     **Example:**
     ```js
-    sessions: {
-        mongodb: "mongodb://myUser:myPassword@localhost:27017/myDatabase?retryWrites=true&w=majority",
+    session: {
+        type: "mongodb",
+        url: "mongodb://myUser:myPassword@localhost:27017/myDatabase?retryWrites=true&w=majority",
     },
     ```
 
@@ -187,9 +190,6 @@ module.exports = {
 
 This project is licensed under the terms of the [LICENSE](LICENSE) file.
 
-- [Versi Bahasa Indonesia](README_ID.md)
-
-
 ## Thanks To
 <table>
   <tr>
@@ -200,3 +200,5 @@ This project is licensed under the terms of the [LICENSE](LICENSE) file.
       <td align="center"><a href="https://github.com/amiruldev20"><img src="https://github.com/amiruldev20.png?size=100" width="100px;" alt=""/><br /><sub><b>Amirul Dev</b></sub></a><br /><sub><i>Author of mongodb session</i></sub></td>
   </tr>
 </table>
+
+- [Versi Bahasa Indonesia](README_ID.md)

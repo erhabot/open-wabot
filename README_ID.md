@@ -68,8 +68,9 @@ module.exports = {
     prefixes: ["!", ">", "$", ".", "-", "+", "?", "#", "@", "/", "&", ",", "ow!"], // Tambahkan karakter yang ingin Anda gunakan sebagai prefix
 
     // Konfigurasi Sesi
-    sessions: {
-        mongodb: "", // Ubah dengan URL MongoDB untuk menggunakan sesi mongodb
+    session: {
+        type: "local",  // Pilihan: "mongodb", "local"
+        url: "mongodb://username:password@host:port/database?options" // Dibutuhkan untuk MongoDB (opsional)
     },
 
     // Informasi bot
@@ -104,14 +105,16 @@ Untuk menggunakan sesi MongoDB, silakan ikuti langkah-langkah berikut:
 2. **Konfigurasikan URL MongoDB**  
     Tambahkan URL MongoDB Anda ke dalam konfigurasi seperti ini:
     ```js
-    sessions: {
-        mongodb: "mongodb://username:password@host:port/database?options",
+    session: {
+        type: "mongodb",
+        url: "mongodb://username:password@host:port/database?options",
     },
     ```
     **Contoh:**
     ```js
-    sessions: {
-        mongodb: "mongodb://myUser:myPassword@localhost:27017/myDatabase?retryWrites=true&w=majority",
+    session: {
+        type: "mongodb",
+        url: "mongodb://myUser:myPassword@localhost:27017/myDatabase?retryWrites=true&w=majority",
     },
     ```
 
@@ -141,6 +144,7 @@ Data yang akan diterima oleh server.
     "user": "6285176765422"
 }
 ```
+
 Data yang akan dikembalikan oleh server.
 ```json
 {
@@ -155,7 +159,10 @@ Data yang akan dikembalikan oleh server.
 
 ## Penggunaan
 
-Jalankan bot dengan perintah `node controller.js`.
+Jalankan bot dengan perintah
+```bash
+node controller.js
+```
 
 ## Menambahkan Plugin
 
@@ -183,8 +190,6 @@ module.exports = {
 
 Proyek ini dilisensikan di bawah lisensi yang tertera di file [LICENSE](LICENSE).
 
-- [English Version](README.md)
-
 ## Terimakasih kepada
 <table>
   <tr>
@@ -195,3 +200,5 @@ Proyek ini dilisensikan di bawah lisensi yang tertera di file [LICENSE](LICENSE)
       <td align="center"><a href="https://github.com/amiruldev20"><img src="https://github.com/amiruldev20.png?size=100" width="100px;" alt=""/><br /><sub><b>Amirul Dev</b></sub></a><br /><sub><i>Penulis sesi mongodb</i></sub></td>
   </tr>
 </table>
+
+- [English Version](README.md)

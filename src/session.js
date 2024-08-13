@@ -3,7 +3,7 @@ const path = require('path');
 const { rmSync } = require('fs');
 const pretty = require('pino-pretty');
 const { isModuleInstalled } = require('./util.js');
-const { debug, sessions } = require('../config.js');
+const { debug, session } = require('../config.js');
 
 let loadAuthState;
 
@@ -15,12 +15,15 @@ const log = global.log || pino(pretty({
 }));
 
 // Check if 'baileys-mongodb' is installed and sessions.mongodb is configured
-if (isModuleInstalled('baileys-mongodb') && sessions?.mongodb) {
+if (isModuleInstalled('baileys-mongodb') && session.type === 'mongodb') {
     // Use MongoDB for session management
     loadAuthState = async function loadAuthState() {
         log.info("Using MongoDB session");
         const { useMongoAuthState } = require('baileys-mongodb');
-        return await useMongoAuthState(sessions.mongodb, {});
+        return await useMongoAuthState(session.url, {
+            tableName: 'open-wabot',
+            session: 'session'
+        });
     };
 } else {
     // Use local file system for session management
@@ -41,11 +44,10 @@ if (isModuleInstalled('baileys-mongodb') && sessions?.mongodb) {
 if (require.main === module) {
     (async () => {
         try {
-            const session = await loadAuthState();
+            const { removeCreds } = await loadAuthState();
             log.warn('Removing session');
-            await session.removeCreds();
+            await removeCreds();
             log.info('Success');
-            process.exit(); // make sure the application is closed
         } catch (err) {
             log.error(err);
         }

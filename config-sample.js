@@ -12,8 +12,9 @@ module.exports = {
     prefixes: ["!", ">", "$", ".", "-", "+", "?", "#", "@", "/", "&", ",", "ow!"], // Add the character you want to use as a prefix
 
     // Session configuration
-    sessions: {
-        mongodb: "", // Change with your Mongodb URL to use the Mongodb session
+    session: {
+        type: "local",  // Options: "mongodb", "firebase", "local"
+        url: "mongodb://username:password@host:port/database?options" // Required for MongoDB
     },
 
     // Bot information
