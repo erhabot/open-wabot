@@ -187,3 +187,13 @@ module.exports = {
 This project is licensed under the terms of the [LICENSE](LICENSE) file.
 
 - [Versi Bahasa Indonesia](README_ID.md)
+
+
+# Thanks To
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/Ismananda"><img src="https://github.com/Ismananda.png?size=100" width="100px;" alt=""/><br /><sub><b>Ismananda</b></sub></a><br /><sub><i>Author of open-wabot</i></sub></td>
+    <td align="center"><a href="https://github.com/KilluaBot"><img src="https://github.com/KilluaBot.png?size=100" width="100px;" alt=""/><br /><sub><b>Rusdi Greyrat</b></sub></a><br /><sub><i>GeneraL Assistent</i></sub></td>
+        <td align="center"><a href="https://github.com/WhiskeySockets/Baileys"><img src="https://github.com/WhiskeySockets.png?size=100" width="100px;" alt=""/><br /><sub><b>WhiskeySockets - Baileys</b></sub></a><br /><sub><i>Library used</i></sub></td>
+  </tr>
+</table>
