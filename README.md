@@ -189,7 +189,7 @@ This project is licensed under the terms of the [LICENSE](LICENSE) file.
 - [Versi Bahasa Indonesia](README_ID.md)
 
 
-# Thanks To
+## Thanks To
 <table>
   <tr>
     <td align="center"><a href="https://github.com/Ismananda"><img src="https://github.com/Ismananda.png?size=100" width="100px;" alt=""/><br /><sub><b>Ismananda</b></sub></a><br /><sub><i>Author of open-wabot</i></sub></td>
