@@ -1,3 +1,4 @@
+[![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#table-of-contents)
 # Open WABOT
 
 Open WABOT adalah sebuah bot WhatsApp yang dirancang seringan mungkin menggunakan modul [Baileys](https://github.com/WhiskeySockets/Baileys).
@@ -183,3 +184,14 @@ module.exports = {
 Proyek ini dilisensikan di bawah lisensi yang tertera di file [LICENSE](LICENSE).
 
 - [English Version](README.md)
+
+## Terimakasih kepada
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/Ismananda"><img src="https://github.com/Ismananda.png?size=100" width="100px;" alt=""/><br /><sub><b>Ismananda</b></sub></a><br /><sub><i>Penulis open-wabot</i></sub></td>
+    <td align="center"><a href="https://github.com/KilluaBot"><img src="https://github.com/KilluaBot.png?size=100" width="100px;" alt=""/><br /><sub><b>Rusdi Greyrat</b></sub></a><br /><sub><i>Pembantu Umum</i></sub></td>
+        <td align="center"><a href="https://github.com/WhiskeySockets/Baileys"><img src="https://github.com/WhiskeySockets.png?size=100" width="100px;" alt=""/><br /><sub><b>WhiskeySockets - Baileys</b></sub></a><br /><sub><i>Perpustakaan yang digunakan</i></sub></td>
+      <td align="center"><a href="https://github.com/adiwajshing"><img src="https://github.com/adiwajshing.png?size=100" width="100px;" alt=""/><br /><sub><b>Adhiraj Singh</b></sub></a><br /><sub><i>Pendiri Baileys</i></sub></td>
+      <td align="center"><a href="https://github.com/amiruldev20"><img src="https://github.com/amiruldev20.png?size=100" width="100px;" alt=""/><br /><sub><b>Amirul Dev</b></sub></a><br /><sub><i>Penulis sesi mongodb</i></sub></td>
+  </tr>
+</table>
