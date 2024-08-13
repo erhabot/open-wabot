@@ -11,6 +11,11 @@ module.exports = {
     // Prefix configuration
     prefixes: ["!", ">", "$", ".", "-", "+", "?", "#", "@", "/", "&", ",", "ow!"], // Add the character you want to use as a prefix
 
+    // Session configuration
+    sessions: {
+        mongodb: "", // Change with your Mongodb URL to use the Mongodb session
+    },
+
     // Bot information
     botName: "Open WABOT", // Name of the bot
     botNumber: "6285176765422", // Phone number of the bot

@@ -9,45 +9,45 @@ Berikut adalah instruksi pemasangan Open WABOT pada beberapa platform.
 ### Arch Linux
 
 1. Install nodejs, npm, dan git.
-```bash
-sudo pacman -S nodejs npm git
-```
+    ```bash
+    sudo pacman -S nodejs npm git
+    ```
 
 2. Clone repositori Open WABOT.
-```bash
-git clone https://github.com/Ismananda/open-wabot
-```
+    ```bash
+    git clone https://github.com/Ismananda/open-wabot
+    ```
 
 3. Masuk ke direktori open-wabot dan jalankan npm install.
-```bash
-cd open-wabot
-npm install
-```
+    ```bash
+    cd open-wabot
+    npm install --omit=optional
+    ```
 
 ### Debian / Ubuntu
 
 1. Install curl dan git.
-```bash
-sudo apt-get install -y curl git
-```
+    ```bash
+    sudo apt-get install -y curl git
+    ```
 
 2. Unduh dan jalankan setup Node.js.
-```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
-sudo -E bash nodesource_setup.sh
-sudo apt-get install -y nodejs
-```
+    ```bash
+    curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
+    sudo -E bash nodesource_setup.sh
+    sudo apt-get install -y nodejs
+    ```
 
 3. Clone repositori Open WABOT.
-```bash
-git clone https://github.com/Ismananda/open-wabot
-```
+    ```bash
+    git clone https://github.com/Ismananda/open-wabot
+    ```
 
 4. Masuk ke direktori open-wabot dan jalankan npm install.
-```bash
-cd open-wabot
-npm install
-```
+    ```bash
+    cd open-wabot
+    npm install --omit=optional
+    ```
 
 ## Konfigurasi
 
@@ -65,6 +65,11 @@ module.exports = {
 
     // Konfigurasi prefix
     prefixes: ["!", ">", "$", ".", "-", "+", "?", "#", "@", "/", "&", ",", "ow!"], // Tambahkan karakter yang ingin Anda gunakan sebagai prefix
+
+    // Konfigurasi Sesi
+    sessions: {
+        mongodb: "", // Ubah dengan URL MongoDB untuk menggunakan sesi mongodb
+    },
 
     // Informasi bot
     botName: "Open WABOT", // Nama bot
@@ -86,13 +91,44 @@ module.exports = {
 };
 ```
 
-## Daftar putih
+### Menggunakan Sesi MongoDB
+Untuk menggunakan sesi MongoDB, silakan ikuti langkah-langkah berikut:
+
+1. **Pasang driver sesi MongoDB**  
+    Jalankan perintah berikut untuk memasang driver sesi MongoDB:
+    ```bash
+    npm run install:mongo
+    ```
+
+2. **Konfigurasikan URL MongoDB**  
+    Tambahkan URL MongoDB Anda ke dalam konfigurasi seperti ini:
+    ```js
+    sessions: {
+        mongodb: "mongodb://username:password@host:port/database?options",
+    },
+    ```
+    **Contoh:**
+    ```js
+    sessions: {
+        mongodb: "mongodb://myUser:myPassword@localhost:27017/myDatabase?retryWrites=true&w=majority",
+    },
+    ```
+
+3. **Jalankan bot**  
+    Jalankan bot dengan perintah berikut:
+    ```bash
+    npm start
+    ```
+
+### Daftar putih
 
 Nomor yang dimasukkan kedalam array daftar putih didalam file konfigurasi bersifat permanen hingga file konfigurasi diubah. Jika ada ingin menambahkan whitelist dalam jangka waktu tertentu, anda bisa menggunakan perintah seperti berikut.
-
 ```
 .whitelist <nomor> <durasi dengan satuan hari>
+```
 
+Contoh:
+```
 .whitelist 6285176765422 30
 ```
 
@@ -107,7 +143,12 @@ Data yang akan diterima oleh server.
 Data yang akan dikembalikan oleh server.
 ```json
 {
-    "whitelisted": true/false
+    "whitelisted": true
+}
+```
+```json
+{
+    "whitelisted": true
 }
 ```
 

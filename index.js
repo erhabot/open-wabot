@@ -6,6 +6,7 @@ const { getMessage, saveMessage } = require('./src/store.js');
 const { stringify, scanDir } = require('./src/util.js');
 const { serialize } = require('./src/serializer.js');
 const { message } = require('./src/handler.js');
+const { loadAuthState } = require('./src/session.js');
 
 const {
     default: newClient,
@@ -22,7 +23,8 @@ global.log = pino(pretty({
 }));
 
 async function connect() {
-    const { state, saveCreds } = await useMultiFileAuthState(`./data/session`);
+    // const { state, saveCreds } = await useMultiFileAuthState(`./data/session`);
+    const { state, saveCreds } = await loadAuthState();
 
     // Create WhatsApp client
     global.bot = newClient({

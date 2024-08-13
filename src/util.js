@@ -18,6 +18,22 @@ function generateID(length = 32, id = '') {
 }
 
 /**
+ * Check whether the module has been installed.
+ * @param {string} - The name of the module to be examined.
+ * @returns {boolean} - Is installed.
+ */
+function isModuleInstalled(name) {
+    try {
+        require.resolve(name);
+        return true;
+    } catch {
+        return import(name)
+            .then(() => true)
+            .catch(() => false);
+    }
+}
+
+/**
  * Serializes an object to a JSON string, converting `undefined` values to a specific string representation.
  *
  * This function uses `JSON.stringify` with a custom replacer function to handle `undefined` values.
@@ -52,6 +68,7 @@ function scanDir(dir, list = []) {
 
 module.exports = {
     generateID,
+    isModuleInstalled,
     stringify,
     scanDir
 };

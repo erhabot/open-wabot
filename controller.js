@@ -9,6 +9,7 @@
 
 const { execSync: run, spawn } = require('child_process');
 const args = ['index.js', ...process.argv.slice(2)];
+const { loadAuthState } = require('./src/session.js');
 
 let restart = false;
 let crashTimestamps = [];
@@ -34,7 +35,8 @@ function start() {
                 handleRestart();
                 break;
             case 'unauthorized':
-                run('rm -rf ./data/session');
+                let s = await loadAuthState();
+                await s.removeCreds()
                 handleRestart();
                 break;
         }

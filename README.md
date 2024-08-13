@@ -9,45 +9,45 @@ Here are the instructions for installing Open WABOT on multiple platforms.
 ### Arch Linux
 
 1. Install nodejs, npm, and git.
-```bash
-sudo pacman -S nodejs npm git
-```
+    ```bash
+    sudo pacman -S nodejs npm git
+    ```
 
 2. Clone the Open WABOT repository.
-```bash
-git clone https://github.com/Ismananda/open-wabot
-```
+    ```bash
+    git clone https://github.com/Ismananda/open-wabot
+    ```
 
 3. Navigate to the `open-wabot` directory and run `npm install`.
-```bash
-cd open-wabot
-npm install
-```
+    ```bash
+    cd open-wabot
+    npm install --no-optional
+    ```
 
 ### Debian / Ubuntu
 
 1. Install curl and git.
-```bash
-sudo apt-get install -y curl git
-```
+    ```bash
+    sudo apt-get install -y curl git
+    ```
 
 2. Download and run the Node.js setup.
-```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
-sudo -E bash nodesource_setup.sh
-sudo apt-get install -y nodejs
-```
+    ```bash
+    curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
+    sudo -E bash nodesource_setup.sh
+    sudo apt-get install -y nodejs
+    ```
 
 3. Clone the Open WABOT repository.
-```bash
-git clone https://github.com/Ismananda/open-wabot
-```
+    ```bash
+    git clone https://github.com/Ismananda/open-wabot
+    ```
 
 4. Navigate to the `open-wabot` directory and run `npm install`.
-```bash
-cd open-wabot
-npm install
-```
+    ```bash
+    cd open-wabot
+    npm install --no-optional
+    ```
 
 ## Configuration
 
@@ -65,6 +65,11 @@ module.exports = {
 
     // Prefix configuration
     prefixes: ["!", ">", "$", ".", "-", "+", "?", "#", "@", "/", "&", ",", "ow!"], // Add the character you want to use as a prefix
+
+    // Session configuration
+    sessions: {
+        mongodb: "", // Change with your Mongodb URL to use the Mongodb session
+    },
 
     // Bot information
     botName: "Open WABOT", // Name of the bot
@@ -86,13 +91,44 @@ module.exports = {
 };
 ```
 
-## Whitelist
+### Using MongoDB Sessions
+To use MongoDB sessions, please follow these steps:
+
+1. **Install MongoDB session driver**  
+    Run the following command to install the MongoDB session driver:
+    ```bash
+    npm run install:mongo
+    ```
+
+2. **Configure MongoDB URL**  
+    Add your MongoDB URL to the configuration like this:
+    ```js
+    sessions: {
+        mongodb: "mongodb://username:password@host:port/database?options",
+    },
+    ```
+    **Example:**
+    ```js
+    sessions: {
+        mongodb: "mongodb://myUser:myPassword@localhost:27017/myDatabase?retryWrites=true&w=majority",
+    },
+    ```
+
+3. **Start the bot**  
+    Start the bot with the following command:
+    ```bash
+    npm start
+    ```
+
+### Whitelist
 
 The numbers entered into the whitelist array in the configuration file are permanent until the configuration file is changed. If you want to add a whitelist within a certain period of time, you can use the following command.
-
 ```
 .whitelist <phone> <duration in days>
+```
 
+Example:
+```
 .whitelist 6285176765422 30
 ```
 
@@ -108,7 +144,12 @@ Data to be received by the server.
 Data to be returned by the server.
 ```json
 {
-    "whitelisted": true/false
+    "whitelisted": true
+}
+```
+```json
+{
+    "whitelisted": true
 }
 ```
 
