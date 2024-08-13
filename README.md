@@ -22,7 +22,7 @@ Here are the instructions for installing Open WABOT on multiple platforms.
 3. Navigate to the `open-wabot` directory and run `npm install`.
     ```bash
     cd open-wabot
-    npm install --no-optional
+    npm install
     ```
 
 ### Debian / Ubuntu
@@ -47,7 +47,7 @@ Here are the instructions for installing Open WABOT on multiple platforms.
 4. Navigate to the `open-wabot` directory and run `npm install`.
     ```bash
     cd open-wabot
-    npm install --no-optional
+    npm install
     ```
 
 ## Configuration

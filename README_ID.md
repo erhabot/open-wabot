@@ -22,7 +22,7 @@ Berikut adalah instruksi pemasangan Open WABOT pada beberapa platform.
 3. Masuk ke direktori open-wabot dan jalankan npm install.
     ```bash
     cd open-wabot
-    npm install --omit=optional
+    npm install
     ```
 
 ### Debian / Ubuntu
@@ -47,7 +47,7 @@ Berikut adalah instruksi pemasangan Open WABOT pada beberapa platform.
 4. Masuk ke direktori open-wabot dan jalankan npm install.
     ```bash
     cd open-wabot
-    npm install --omit=optional
+    npm install
     ```
 
 ## Konfigurasi
