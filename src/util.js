@@ -24,12 +24,13 @@ function generateID(length = 32, id = '') {
  */
 function isModuleInstalled(name) {
     try {
+        // Check if module can be resolved
         require.resolve(name);
         return true;
     } catch {
-        return import(name)
-            .then(() => true)
-            .catch(() => false);
+        // If module cannot be resolved, check node_modules directory
+        const modulePath = path.resolve('node_modules', name);
+        return fs.existsSync(modulePath);
     }
 }
 
