@@ -1,5 +1,6 @@
 const expired = 3600; // Time in seconds before messages expire
 let messages = {};
+let groups = {};
 
 /**
  * Retrieves a message from the messages store.
@@ -45,7 +46,77 @@ function saveMessage(msg) {
     messages[id] = messages[id].filter((item) => time - item.timestamp <= expired);
 }
 
+/**
+ * Save all groups metadata.
+ *
+ * This function will store all the metadata group that will be used to check the
+ * admin status on the bot or user in the group and will reduce the request to the whatsapp server
+ * instead of asking the server every time the user sends a message.
+ *
+ * @param {Object} groupsM - Groups Metadata to be saved.
+ */
+function saveAllGroupMetadata(groupsM) {
+    for (const [id, group] of Object.entries(groupsM)) {
+        group.isAdmin = function isAdmin(user) {
+            return !!group.participants.find(x => x.id === user)?.admin;
+        }
+
+        group.isSuperAdmin = function isSuperAdmin(user) {
+            return !!group.participants.find(x => x.id === user && x.admin === 'superadmin')?.admin;
+        }
+
+        groups[id] = group;
+    }
+}
+
+/**
+ * Update group metadata.
+ *
+ * This function will store or renew the metadata group into the cache storage
+ * by adding several functions to check whether a user is an admin.
+ *
+ * @param {Object} groups - Group object to be saved.
+ */
+function updateGroupMetadata(group) {
+    group.isAdmin = function isAdmin(user) {
+        return !!group.participants.find(x => x.id === user)?.admin;
+    }
+
+    group.isSuperAdmin = function isSuperAdmin(user) {
+        return !!group.participants.find(x => x.id === user && x.admin === 'superadmin')?.admin;
+    }
+
+    groups[group.id] = group;
+}
+
+/**
+ * Fetch group metadata.
+ *
+ * This function retrieves the metadata for the specified group from the cache storage.
+ *
+ * @param {string} groupId - The ID of the group whose metadata is to be fetched.
+ * @returns {object} - The metadata object of the group.
+ */
+function fetchGroupMetadata(groupId) {
+    return groups[groupId];
+}
+
+/**
+ * Remove group metadata.
+ *
+ * This function removes the metadata for the specified group from the cache storage.
+ *
+ * @param {string} groupId - The ID of the group whose metadata is to be removed.
+ */
+function removeGroupMetadata(groupId) {
+    delete groups[groupId];
+}
+
 module.exports = {
     getMessage,
-    saveMessage
+    saveMessage,
+    saveAllGroupMetadata,
+    updateGroupMetadata,
+    fetchGroupMetadata,
+    removeGroupMetadata
 }

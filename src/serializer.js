@@ -1,5 +1,5 @@
+const { getMessage, fetchGroupMetadata } = require('./store.js');
 const { downloadMediaMessage } = require('baileys');
-const { getMessage } = require('./store.js');
 const { generateID } = require('./util.js')
 const config = require('../config.js');
 
@@ -50,7 +50,10 @@ function serialize(rmsg) {
 
     m.isGroup = m.chat.server === 'g.us';
     if (m.isGroup) {
-        // TODO: Implement functionality to read group metadata
+        m.group = fetchGroupMetadata(m.chat.toString());
+        m.isGroupAdmin = m.group?.isAdmin(m.sender.toString()) || false;
+        m.isGroupSuperAdmin = m.group?.isSuperAdmin(m.sender.toString()) || false;
+        m.isBotAdmin = m.group?.isAdmin(bot.decodeJID(bot.user.id).toString()) || false;
     }
 
     let edited = rmsg.message.editedMessage?.message?.protocolMessage;
@@ -69,14 +72,12 @@ function serialize(rmsg) {
     }
 
     if (edited?.editedMessage) {
-        msg = getMessage(m.chat.toString(), edited.key.id).message || edited.editedMessage;
+        rmsg.message = msg = getMessage(m.chat.toString(), edited.key.id).message || edited.editedMessage;
         msg = msg[getMessageType(msg)];
     }
 
     m.mimetype = msg.mimetype || 'text/plain';
-    if (msg.mimetype || msg.thumbnailDirectPath) {
-        m.download = function download() { return downloadMediaMessage({ rmsg }, 'buffer', { reuploadRequest: bot.updateMediaMessage })};
-    }
+    m.download = async function download() { return (msg.mimetype || msg.thumbnailDirectPath) ? await downloadMediaMessage(rmsg, 'buffer', { reuploadRequest: bot.updateMediaMessage }) : Buffer.from(m.body, 'utf-8')};
 
     m.key = rmsg.key;
     m.message = rmsg.message;
@@ -91,21 +92,18 @@ function serialize(rmsg) {
                     remoteJid: ctx.remoteJid || m.chat.toString(),
                     participant: ctx.participant
                 },
-                pushName: userName[ctx.participant]
             };
             msg = getMessage(m.quoted.key.remoteJid, ctx.stanzaId);
-            console.log(msg)
             msg = msg.message ? msg : { message: ctx.quotedMessage };
+            m.quoted.pushName = msg.pushName || userName[ctx.participant];
+            m.quoted.message = msg.message;
             m.quoted.timestamp = msg.messageTimestamp || 0;
             let type = getMessageType(msg.message);
             msg = msg.message[type];
             m.quoted.mimetype = msg.mimetype || 'text/plain';
             m.quoted.text = typeof msg === 'string' ? msg : msg.text || msg.caption || '';
             m.quoted.url = (m.quoted.text.match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi) || [])[0] || '';
-            m.quoted[type] = msg;
-            if (msg.mimetype || msg.thumbnailDirectPath) {
-                m.quoted.download = function download() { return downloadMediaMessage({ message: m.quoted }, 'buffer', { reuploadRequest: bot.updateMediaMessage }); };
-            }
+            m.quoted.download = async function download() { return (msg.mimetype || msg.thumbnailDirectPath) ? await downloadMediaMessage(m.quoted, 'buffer', { reuploadRequest: bot.updateMediaMessage }) : Buffer.from(m.quoted.text, 'utf-8')};
         }
     }
 
@@ -142,7 +140,13 @@ function serialize(rmsg) {
 
                 case (Buffer.isBuffer(content)):
                     const { fileTypeFromBuffer } = await import('file-type');
-                    const { mime, ext } = await fileTypeFromBuffer(content);
+                    let mime, ext
+                    try {
+                        ({ mime, ext } = await fileTypeFromBuffer(content));
+                    } catch {
+                        [mime, ext] = ['text/plain', 'txt']
+                    }
+
                     if (msg.text) {
                         msg.caption = msg.text;
                         delete msg.text;

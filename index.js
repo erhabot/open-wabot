@@ -2,18 +2,26 @@ const pino = require('pino');
 const pretty = require('pino-pretty');
 const config = require('./config.js');
 const { generate } = require('qrcode-terminal');
-const { getMessage, saveMessage } = require('./src/store.js');
 const { stringify, scanDir } = require('./src/util.js');
 const { serialize } = require('./src/serializer.js');
 const { message } = require('./src/handler.js');
 const { loadAuthState } = require('./src/session.js');
 
 const {
+    getMessage,
+    saveMessage,
+    saveAllGroupMetadata,
+    updateGroupMetadata,
+    removeGroupMetadata
+} = require('./src/store.js');
+
+const {
     default: newClient,
     DisconnectReason,
     jidDecode,
-    useMultiFileAuthState,
 } = require('baileys');
+
+let initialized = false;
 
 // Create a logger with configuration based on debug settings
 global.log = pino(pretty({
@@ -23,7 +31,6 @@ global.log = pino(pretty({
 }));
 
 async function connect() {
-    // const { state, saveCreds } = await useMultiFileAuthState(`./data/session`);
     const { state, saveCreds } = await loadAuthState();
 
     // Create WhatsApp client
@@ -58,7 +65,7 @@ async function connect() {
     bot.ev.on('creds.update', saveCreds);
 
     // Manage connection updates
-    bot.ev.on('connection.update', update => {
+    bot.ev.on('connection.update', async update => {
         const { connection, lastDisconnect, qr } = update;
         if (lastDisconnect == 'undefined' && qr != 'undefined') generate(qr, { small: true }); // Generate QR code if available
 
@@ -68,6 +75,13 @@ async function connect() {
                 break;
             case 'open':
                 log.info('Connected!');
+
+                // Saving all group metadata after connected
+                if (!initialized) {
+                    const groupsM = await bot.groupFetchAllParticipating();
+                    saveAllGroupMetadata(groupsM);
+                    initialized = true;
+                }
                 break;
             case 'close':
                 if (lastDisconnect?.error?.output?.statusCode === DisconnectReason.loggedOut) {
@@ -103,6 +117,23 @@ async function connect() {
         }
     });
 
+    // Handle group metadata update
+    bot.ev.on('groups.upsert', async groups => {
+        if (config.debug) console.log('group upsert', stringify(groups));
+        for (const group of groups) {
+            updateGroupMetadata(group);
+        }
+    })
+
+    // Handle group participant update
+    bot.ev.on('group-participants.update', async g => {
+        if (config.debug) console.log('group update', stringify(g));
+        if (g.action === 'remove' && g.participants.includes(bot.decodeJID(bot.user.id).toString())) {
+            removeGroupMetadata(g.id);
+            return
+        }
+    });
+
     // Manage incoming messages
     bot.ev.on('messages.upsert', async msg => {
         if (msg.type === 'append') return;
@@ -111,7 +142,7 @@ async function connect() {
             m = serialize(m);
             if (!m || m.broadcast) continue;
             log.info(`Received ${m.type} from ${m.sender.user}, at ${m.isGroup ? 'group ' : ''}${m.chat.user}${m.body ? '\nMessage: ' + m.body : ''}`)
-            if (config.debug) console.log(stringify(m));
+            if (config.debug) console.log('message upsert', stringify(m));
             let plugins = scanDir('./plugins')
             message(m, plugins)
         }
