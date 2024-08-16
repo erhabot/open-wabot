@@ -20,6 +20,7 @@ node_modules/
 
 # Config file
 config.js
+fireSession.json
 
 # Data directory
 data/

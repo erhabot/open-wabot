@@ -11,7 +11,9 @@
     "start": "node controller.js",
     "clear:session": "node src/session.js",
     "install:mongo": "npm i baileys-mongodb",
-    "uninstall:mongo": "npm un baileys-mongodb"
+    "uninstall:mongo": "npm un baileys-mongodb",
+    "install:firebase": "npm i baileys-firebase",
+    "uninstall:firebase": "npm un baileys-firebase"
   },
   "repository": {
     "type": "git",
@@ -43,6 +45,9 @@
     "sharp": "^0.32.6"
   },
   "peerDependenciesMeta": {
+    "baileys-firebase": {
+      "optional": true
+    },
     "baileys-mongodb": {
       "optional": true
     },

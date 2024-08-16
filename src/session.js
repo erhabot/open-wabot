@@ -1,6 +1,6 @@
 const pino = require('pino');
 const path = require('path');
-const { rmSync } = require('fs');
+const { rmSync, existsSync } = require('fs');
 const pretty = require('pino-pretty');
 const { isModuleInstalled } = require('./util.js');
 const { debug, session } = require('../config.js');
@@ -21,6 +21,16 @@ if (isModuleInstalled('baileys-mongodb') && session.type === 'mongodb') {
         log.info("Using MongoDB session");
         const { useMongoAuthState } = require('baileys-mongodb');
         return await useMongoAuthState(session.url, {
+            tableName: 'open-wabot',
+            session: 'session'
+        });
+    };
+} else if (isModuleInstalled('baileys-firebase') && existsSync('fireSession.json') && session.type === 'firebase') {
+    // Use Firebase for session management
+    loadAuthState = async function loadAuthState() {
+        log.info("Using firebase session");
+        const { useFireAuthState } = require('baileys-firebase');
+        return await useFireAuthState({
             tableName: 'open-wabot',
             session: 'session'
         });

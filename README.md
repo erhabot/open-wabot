@@ -69,7 +69,7 @@ module.exports = {
 
     // Session configuration
     session: {
-        type: "local",  // Options: "mongodb", "local"
+        type: "local",  // Options: "mongodb", "local", "firebase"
         url: "mongodb://username:password@host:port/database?options" // Required for MongoDB (optional)
     },
 
@@ -119,6 +119,35 @@ To use MongoDB sessions, please follow these steps:
     ```
 
 3. **Start the bot**  
+    Start the bot with the following command:
+    ```bash
+    npm start
+    ```
+
+### Using Firebase Sessions
+To use Firebase sessions, please follow these steps:
+
+1. **Install Firebase session driver**  
+    Run the following command to install the Firebase session driver:
+    ```bash
+    npm run install:firebase
+    ```
+
+2. **Configure session type**  
+    Change session type in configuration like this:
+    ```js
+    session: {
+        type: "firebase",
+    },
+    ```
+
+3. **Download Firebase credentials**
+    Download Firebase credentials from the following URL and save with name `fireSession.json`
+    ```
+    https://console.firebase.google.com/u/0/project/<NamaProject>/settings/serviceaccounts/adminsdk
+    ```
+
+4. **Start the bot**  
     Start the bot with the following command:
     ```bash
     npm start

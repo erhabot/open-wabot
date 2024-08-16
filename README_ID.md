@@ -123,6 +123,33 @@ Untuk menggunakan sesi MongoDB, silakan ikuti langkah-langkah berikut:
     ```bash
     npm start
     ```
+### Menggunakan Sesi Firebase
+Untuk menggunakan sesi firebase, silakan ikuti langkah-langkah berikut:
+
+1. **Pasang driver sesi Firebase**  
+    Jalankan perintah berikut untuk memasang driver sesi Firebase:
+    ```bash
+    npm run install:firebase
+    ```
+
+2. **Konfigurasikan tipe sesi**  
+    Ubah tipe sesi dalam konfigurasi seperti ini:
+    ```js
+    session: {
+        type: "firebase",
+    },
+    ```
+3. **Unduh kredensial Firebase**
+    Unduh kredensial firebase dari URL berikut dan simpan dengan nama `fireSession.json`
+    ```
+    https://console.firebase.google.com/u/0/project/<NamaProject>/settings/serviceaccounts/adminsdk
+    ```
+
+4. **Jalankan bot**  
+    Jalankan bot dengan perintah berikut:
+    ```bash
+    npm start
+    ```
 
 ### Daftar putih
 
