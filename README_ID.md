@@ -210,6 +210,16 @@ module.exports = {
 
 ## Links
 
+## Fitur Bawaan
+
+Untuk menggunakan fitur bawaan, Anda dapat menjalankan perintah seperti berikut dan mengkonfigurasi file config.plugins.js setelah plugin berhasil menginstal.
+
+```bash
+npm run install:plugins
+```
+
+Perlu diperhatikan untuk selalu menyimpan salinan isi konfigurasi plugin karena setiap pembaharuan versi kemungkinan akan tertimpa dengan file konfigurasi yang baru.
+
 [![WhatsApp Community](https://img.shields.io/badge/community-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/IV57VaY23wHLSn0LdOTNmC)
 [![Github Discussion](https://img.shields.io/badge/discussion-5F5F5F?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Ismananda/open-wabot/discussions)
 

@@ -210,6 +210,16 @@ module.exports = {
 }
 ```
 
+## Built in Features
+
+To use built in feature, you can run commands like this and configure config.plugin.js files after plugins successfully installed.
+
+```bash
+npm run install:plugins
+```
+
+It should be noted to always save a copy of the contents of the plugin configuration because every renewal of the version is likely to be affected by the new configuration file.
+
 ## Links
 
 [![WhatsApp Community](https://img.shields.io/badge/community-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/IV57VaY23wHLSn0LdOTNmC)

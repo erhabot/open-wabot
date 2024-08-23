@@ -1,6 +1,6 @@
 {
   "name": "open-wabot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple whatsapp bot",
   "main": "index.js",
   "engines": {
@@ -10,6 +10,8 @@
     "test": "node test.js",
     "start": "node controller.js",
     "clear:session": "node src/session.js",
+    "install:plugins": "npm i bot-plugins && ln -s ./node_modules/bot-plugins/config.js ./config.plugin.js",
+    "uninstall:plugins": "cp ./node_modules/bot-plugins/config.js ./data/config.plugin.js && npm un plugins",
     "install:mongo": "npm i baileys-mongodb",
     "uninstall:mongo": "npm un baileys-mongodb",
     "install:firebase": "npm i baileys-firebase",
@@ -41,12 +43,16 @@
     "syntax-error": "^1.4.0"
   },
   "peerDependencies": {
-    "baileys-mongodb": "^1.0.3",
+    "baileys-mongodb": "^1.0.4",
+    "bot-plugins": "^1.0.0",
     "jimp": "^0.16.13",
     "sharp": "^0.32.6"
   },
   "peerDependenciesMeta": {
     "baileys-firebase": {
+      "optional": true
+    },
+    "bot-plugins": {
       "optional": true
     },
     "baileys-mongodb": {

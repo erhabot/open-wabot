@@ -1,4 +1,5 @@
 const config = require('../config.js');
+const { isModuleInstalled } = require('./util.js');
 const { isWhitelist } = require('./whitelist.js');
 
 /**
@@ -29,6 +30,7 @@ async function message(m, plugins) {
 		}
 	}
 
+    if (isModuleInstalled('bot-plugins')) plugins = plugins.concat(require('bot-plugins'));
     plugins = plugins.filter(p => !!Object.keys(p).length);
     const administrator = !!config.administrator.find(x => x == m.sender.user);
 
