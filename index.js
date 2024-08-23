@@ -2,7 +2,7 @@ const pino = require('pino');
 const pretty = require('pino-pretty');
 const config = require('./config.js');
 const { generate } = require('qrcode-terminal');
-const { stringify, scanDir } = require('./src/util.js');
+const { stringify, scanDir, getVersion } = require('./src/util.js');
 const { serialize } = require('./src/serializer.js');
 const { message } = require('./src/handler.js');
 const { loadAuthState } = require('./src/session.js');
@@ -22,6 +22,7 @@ const {
 } = require('baileys');
 
 let initialized = false;
+let version = getVersion(false);
 
 // Create a logger with configuration based on debug settings
 global.log = pino(pretty({
@@ -35,6 +36,7 @@ async function connect() {
 
     // Create WhatsApp client
     global.bot = newClient({
+        version,
         auth: state,
         logger: pino(pretty({
             colorize: true,
@@ -67,7 +69,7 @@ async function connect() {
     // Manage connection updates
     bot.ev.on('connection.update', async update => {
         const { connection, lastDisconnect, qr } = update;
-        if (lastDisconnect == 'undefined' && qr != 'undefined') generate(qr, { small: true }); // Generate QR code if available
+        if (lastDisconnect === 'undefined' && qr !== 'undefined') generate(qr, { small: true }); // Generate QR code if available
 
         switch (connection) {
             case 'connecting':
@@ -84,7 +86,8 @@ async function connect() {
                 }
                 break;
             case 'close':
-                if (lastDisconnect?.error?.output?.statusCode === DisconnectReason.loggedOut) {
+                const error = lastDisconnect?.error?.output;
+                if (error?.statusCode === DisconnectReason.loggedOut) {
                     log.error('Disconnected: Logged out!');
                     try {
                         process.send('unauthorized'); // Send unauthorized signal to parent process
@@ -101,8 +104,8 @@ async function connect() {
                         // causing PM2 to stop the restart cycle, considering the app erroneous.
                     }
                     return;
-                }
-                log.error(`Disconnected: ${lastDisconnect?.error?.output?.message}`);
+                } else if (error?.statusCode === 405) version = await getVersion(true);
+                log.error(`Disconnected: ${error?.message || error?.payload?.message || stringify(error)}`);
                 connect(); // Attempt to reconnect
                 break;
         }
@@ -143,8 +146,8 @@ async function connect() {
             if (!m || m.broadcast) continue;
             log.info(`Received ${m.type} from ${m.sender.user}, at ${m.isGroup ? 'group ' : ''}${m.chat.user}${m.body ? '\nMessage: ' + m.body : ''}`)
             if (config.debug) console.log('message upsert', stringify(m));
-            let plugins = scanDir('./plugins')
-            message(m, plugins)
+            let plugins = scanDir('./plugins');
+            message(m, plugins);
         }
     });
 

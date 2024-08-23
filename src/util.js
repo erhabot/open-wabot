@@ -1,4 +1,6 @@
 const { randomBytes } = require('crypto');
+const cheerio = require('cheerio');
+const axios = require('axios');
 const path = require('path');
 const fs = require('fs');
 
@@ -15,6 +17,32 @@ function generateID(length = 32, id = '') {
     id += randomBytes(Math.floor((length - id.length) / 2)).toString('hex');
     while (id.length < length) id += '0';
     return id.toUpperCase();
+}
+
+function getVersion(getnew) {
+    const verdata = path.join(__dirname, '..', 'data', 'version.json');
+    if (getnew) {
+        return (async () =>{
+            try {
+                const response = await axios.get('https://wppconnect.io/whatsapp-versions');
+                const $ = cheerio.load(response.data);
+
+                const versionInfo = $('.card__header h3').filter(function() {
+                    const text = $(this).text();
+                    return text.includes('stable') && text.includes('current');
+                }).text().split(' ')[0];
+
+                const version = versionInfo.split('.');
+                await fs.writeFileSync(verdata, JSON.stringify(version), 'utf-8');
+                return version;
+            } catch (error) {
+                log.error('Error fetching data:', error);
+            }
+        })()
+    }
+
+    if (fs.existsSync(verdata)) return require(verdata);
+    return ['2','3000','1015910634-alpha'];
 }
 
 /**
@@ -68,6 +96,7 @@ function scanDir(dir, list = []) {
 }
 
 module.exports = {
+    getVersion,
     generateID,
     isModuleInstalled,
     stringify,

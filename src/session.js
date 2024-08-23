@@ -1,11 +1,12 @@
 const pino = require('pino');
 const path = require('path');
-const { rmSync, existsSync } = require('fs');
+const { rmSync, existsSync, mkdirSync } = require('fs');
 const pretty = require('pino-pretty');
 const { isModuleInstalled } = require('./util.js');
 const { debug, session } = require('../config.js');
 
 let loadAuthState;
+mkdirSync(path.join(__dirname, '..', 'data'), { recursive: true });
 
 // Initialize logging with pino and pino-pretty
 const log = global.log || pino(pretty({
@@ -15,7 +16,7 @@ const log = global.log || pino(pretty({
 }));
 
 // Check if 'baileys-mongodb' is installed and sessions.mongodb is configured
-if (isModuleInstalled('baileys-mongodb') && session.type === 'mongodb') {
+if (isModuleInstalled('baileys-mongodb') && session.type == 'mongodb') {
     // Use MongoDB for session management
     loadAuthState = async function loadAuthState() {
         log.info("Using MongoDB session");
@@ -25,7 +26,7 @@ if (isModuleInstalled('baileys-mongodb') && session.type === 'mongodb') {
             session: 'session'
         });
     };
-} else if (isModuleInstalled('baileys-firebase') && existsSync('fireSession.json') && session.type === 'firebase') {
+} else if (isModuleInstalled('baileys-firebase') && existsSync('fireSession.json') && session.type == 'firebase') {
     // Use Firebase for session management
     loadAuthState = async function loadAuthState() {
         log.info("Using firebase session");
