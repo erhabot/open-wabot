@@ -4,7 +4,7 @@
   "description": "Simple whatsapp bot",
   "main": "index.js",
   "engines": {
-    "node": ">=20"
+    "node": ">20.0.0 <22.7.0"
   },
   "scripts": {
     "test": "node test.js",
@@ -37,6 +37,7 @@
     "axios": "^1.7.5",
     "baileys": "^6.7.7",
     "cheerio": "^1.0.0",
+    "emoji-regex": "^10.3.0",
     "file-type": "^19.4.1",
     "pino-pretty": "^11.2.2",
     "qrcode-terminal": "^0.12.0",

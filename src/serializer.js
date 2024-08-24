@@ -1,6 +1,7 @@
 const { getMessage, fetchGroupMetadata } = require('./store.js');
 const { downloadMediaMessage } = require('baileys');
-const { generateID } = require('./util.js')
+const { generateID } = require('./util.js');
+const emoji = require('emoji-regex');
 const config = require('../config.js');
 
 let recentId = {};
@@ -8,7 +9,7 @@ let userName = {};
 
 function getMessageType(content) {
     if (!content) return '';
-    return Object.keys(content).find(k => !/^(senderKeyDistributionMessage|messageContextInfo)$/.test(k)) || ''
+    return Object.keys(content).find(k => !/^(senderKeyDistributionMessage|messageContextInfo)$/.test(k)) || '';
 }
 
 function parseMention(text) {
@@ -34,7 +35,7 @@ function parseMention(text) {
 function serialize(rmsg) {
     if (!rmsg.message || !rmsg.key || rmsg.status === 1) return;
     if (recentId[rmsg.key.sender] === rmsg.key.id) return;
-    recentId[rmsg.key.sender] = rmsg.key.id
+    recentId[rmsg.key.sender] = rmsg.key.id;
 
     let m = {
         id: rmsg.key.id,
@@ -108,33 +109,39 @@ function serialize(rmsg) {
     }
 
     m.reply = async function reply(...contents) {
-        let msg = {}
+        let msg = {};
         let opt = {
             quoted: rmsg,
             getUrlInfo: false,
             ephemeralExpiration: m.expiration,
             messageId: generateID(24, '0SW8')
-        }
+        };
         for (let content of contents) {
             switch (true) {
                 case (typeof content === 'string'):
-                    let mentions = parseMention(content);
-                    if (mentions) {
-                        msg.mentions = mentions
-                    }
-
+                    emojies = content.match(emoji());
                     if (msg.image || msg.video || msg.document) {
                         if (msg.text) {
-                            msg.caption += ' ' + content
+                            msg.caption += ' ' + content;
                         } else {
                             msg.caption = content;
                         }
                     } else if (!msg.audio && !msg.sticker) {
                         if (msg.text) {
-                            msg.text += ' ' + content
-                        } else {
+                            msg.text += ' ' + content;
+                        } else if (contents.length === 1 && emojies && emojies[0].length === content.length) {
+                            msg.react = {
+                                text: content,
+                                key: m.key
+                            };
+                        }else {
                             msg.text = content;
                         }
+                    }
+
+                    let mentions = parseMention(content);
+                    if (mentions) {
+                        msg.mentions = mentions;
                     }
                     break;
 
@@ -144,7 +151,7 @@ function serialize(rmsg) {
                     try {
                         ({ mime, ext } = await fileTypeFromBuffer(content));
                     } catch {
-                        [mime, ext] = ['text/plain', 'txt']
+                        [mime, ext] = ['text/plain', 'txt'];
                     }
 
                     if (msg.text) {
@@ -170,7 +177,7 @@ function serialize(rmsg) {
                     break;
 
                 case (typeof content === 'object'):
-                    Object.assign(opt, content)
+                    Object.assign(opt, content);
                     break;
 
                 default:

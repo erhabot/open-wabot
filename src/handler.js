@@ -39,15 +39,12 @@ async function message(m, plugins) {
         bot.sendPresenceUpdate('composing', m.chat.toString());
         if (plugin.admin && !administrator) return m.reply('⚠️ This feature only for administrator!');
         try {
+            await m.reply('⏱️');
             await plugin.run(m, plugins);
+            await m.reply('👍');
         } catch (e) {
-            bot.sendMessage(m.chat.toString(), {
-                react: {
-                    text: '❌',
-                    key: m.key,
-                  }
-            })
-            log.error('Error executing plugin:', e);
+            await m.reply('❌');
+            log.error(`Error executing plugin: ${e}`);
         }
         return;
     }
