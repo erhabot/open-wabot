@@ -64,6 +64,10 @@ module.exports = {
     // Konfigurasi mode pairing
     usePairing: false, // Setel ke true untuk menggunakan mode pairing
 
+    // Konfigurasi baca otomatis
+    autoReadMSG: true, // Selalu menandai pesan sebagai telah dibaca
+    autoReadSW: true, // Membuat bot selalu melihat cerita
+
     // Konfigurasi prefix
     prefixes: ["!", ">", "$", ".", "-", "+", "?", "#", "@", "/", "&", ",", "ow!"], // Tambahkan karakter yang ingin Anda gunakan sebagai prefix
 

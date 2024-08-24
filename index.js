@@ -143,7 +143,17 @@ async function connect() {
         for (let m of msg.messages) {
             saveMessage(m);
             m = serialize(m);
-            if (!m || m.broadcast) continue;
+            if (!m) continue;
+            if (m.key.remoteJid === 'status@broadcast' && config.autoReadSW) {
+                await bot.readMessages([m.key]);
+                return;
+            }
+
+            if (m.broadcast) continue;
+            if (config.autoReadMSG) {
+                await bot.readMessages([m.key]);
+            }
+
             log.info(`Received ${m.type} from ${m.sender.user}, at ${m.isGroup ? 'group ' : ''}${m.chat.user}${m.body ? '\nMessage: ' + m.body : ''}`)
             if (config.debug) console.log('message upsert', stringify(m));
             let plugins = scanDir('./plugins');

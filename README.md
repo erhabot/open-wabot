@@ -64,6 +64,10 @@ module.exports = {
     // Pairing mode configuration
     usePairing: false, // Set to true to use pairing mode
 
+    // Auto read configuration
+    autoReadMSG: true, // Always mark message as readed
+    autoReadSW: true, // Make bot can read story
+
     // Prefix configuration
     prefixes: ["!", ">", "$", ".", "-", "+", "?", "#", "@", "/", "&", ",", "ow!"], // Add the character you want to use as a prefix
 
