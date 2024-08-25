@@ -108,6 +108,7 @@ function serialize(rmsg) {
         }
     }
 
+    let reacted = 0;
     m.reply = async function reply(...contents) {
         let msg = {};
         let opt = {
@@ -116,6 +117,7 @@ function serialize(rmsg) {
             ephemeralExpiration: m.expiration,
             messageId: generateID(24, '0SW8')
         };
+        let optc;
         for (let content of contents) {
             switch (true) {
                 case (typeof content === 'string'):
@@ -129,12 +131,16 @@ function serialize(rmsg) {
                     } else if (!msg.audio && !msg.sticker) {
                         if (msg.text) {
                             msg.text += ' ' + content;
-                        } else if (contents.length === 1 && emojies && emojies[0].length === content.length) {
+                        } else if (contents.length === 1 && emojies && emojies[0].length === content.length || content === '' && reacted%2 === 1) {
+                            if (content === '' && reacted%2 === 1) reacted -= 1;
+                            else reacted += 1;
                             msg.react = {
                                 text: content,
                                 key: m.key
                             };
+                            continue;
                         }else {
+                            if (!content) continue;
                             msg.text = content;
                         }
                     }
@@ -177,7 +183,12 @@ function serialize(rmsg) {
                     break;
 
                 case (typeof content === 'object'):
-                    Object.assign(opt, content);
+                    if (!optc) {
+                        msg = Object.assign(msg, content);
+                        optc = true;
+                    }
+                    else opt = Object.assign(opt, content);
+                    opt = Object.assign(opt, content);
                     break;
 
                 default:
@@ -185,6 +196,11 @@ function serialize(rmsg) {
             }
         }
 
+        let havemsg;
+        for(const key in msg) {
+            if (msg[key]) havemsg = true;
+        }
+        if(!havemsg) return;
         return bot.sendMessage(m.chat.toString(), msg, opt);
     }
     return m;

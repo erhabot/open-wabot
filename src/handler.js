@@ -41,7 +41,7 @@ async function message(m, plugins) {
         try {
             await m.reply('⏱️');
             await plugin.run(m, plugins);
-            await m.reply('👍');
+            await m.reply('');
         } catch (e) {
             await m.reply('❌');
             log.error(`Error executing plugin: ${e}`);
