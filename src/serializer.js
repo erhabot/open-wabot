@@ -110,7 +110,7 @@ function serialize(rmsg) {
 
     let reacted = 0;
     m.reply = async function reply(...contents) {
-        let msg = { mentions: []};
+        let msg = {};
         let opt = {
             quoted: rmsg,
             getUrlInfo: false,
@@ -147,7 +147,9 @@ function serialize(rmsg) {
 
                     let mentions = parseMention(content);
                     if (mentions) {
-                        msg.mentions = msg.mentions.concat(mentions);
+                        msg.mentions = msg.mentions?.length > 0
+                            ? msg.mentions.concat(mentions)
+                            : mentions;
                     }
                     break;
 
