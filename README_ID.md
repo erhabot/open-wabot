@@ -202,6 +202,8 @@ Untuk menambahkan plugin, silakan gunakan format berikut:
 ```js
 module.exports = {
     admin: false, // Apakah plugin khusus administrator
+    gconly: false, // Apakah plugin khusus group
+    gcadmin: false, // Apakah plugin khusus admin group
     name: 'name', // Nama fitur yang ditambahkan
     alias: ['alias1', 'alias2'], // Nama lain dari fitur bisa digunakan sebagai perintah alternatif
     category: 'test', // Kategori dari fitur yang ditambahkan

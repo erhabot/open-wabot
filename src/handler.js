@@ -37,7 +37,9 @@ async function message(m, plugins) {
     for (let plugin of plugins) {
         if (![plugin?.name, ...plugin?.alias].includes(m.cmd)) continue;
         bot.sendPresenceUpdate('composing', m.chat.toString());
-        if (plugin.admin && !administrator) return m.reply('⚠️ This feature only for administrator!');
+        if (plugin.admin && !administrator) return m.reply(m.sender.user.startsWith('62') ? '⚠️ Fitur ini hanya untuk administrator!' : '⚠️ This feature only for administrator!');
+        if (plugin.gconly && !m.isGroup) return m.reply(m.sender.user.startsWith('62') ? '⚠️ Fitur ini hanya dapat digunakan di dalam grup!' : '⚠️ This feature only can used inside group chat!');
+        if (plugin.gcadmin && !m.isGroupAdmin) return m.reply(m.sender.user.startsWith('62') ? '⚠️ Fitur Ini hanya tersedia untuk admin grup!' : '⚠️ This feature is only available for the group admin!');
         try {
             await m.reply('⏱️');
             await plugin.run(m, plugins);

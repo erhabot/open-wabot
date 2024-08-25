@@ -203,7 +203,9 @@ To add a plugin, please use the following format:
 
 ```js
 module.exports = {
-    admin: false, // Is the plugin administrator-only
+    admin: false, // Is the plugin only for administrator
+    gconly: false, // Is the plugin only for group chat
+    gcadmin: false, // Is the plugin only for group admin
     name: 'name', // Added feature names
     alias: ['alias1', 'alias2'], // Other names of the feature can be used as alternative commands
     category: 'test', // Categories of added features

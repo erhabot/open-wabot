@@ -135,6 +135,8 @@ async function connect() {
             removeGroupMetadata(g.id);
             return
         }
+        const group = await bot.groupMetadata(g.id);
+        updateGroupMetadata(group);
     });
 
     // Manage incoming messages
