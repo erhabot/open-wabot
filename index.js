@@ -51,7 +51,7 @@ async function connect() {
     });
 
     // Start pairing if the bot isn't registered and QR is not used
-    if (!bot.authState.creds.registered && config.usePairing) {
+    if (!bot.authState.creds.me && config.usePairing) {
         async function pair() {
             log.info(`Pairing code: ${await bot.requestPairingCode(config.botNumber)}`);
             await delay(600000); // Wait for 10 minutes
