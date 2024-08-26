@@ -43,7 +43,7 @@ function serialize(rmsg) {
         chat: bot.decodeJID(rmsg.key.remoteJid),
         sender: bot.decodeJID(rmsg.key.fromMe ? bot.user.id : rmsg.key.participant || rmsg.key.remoteJid),
         fromMe: rmsg.key.fromMe,
-        broadcast: rmsg.broadcast,
+        broadcast: rmsg.broadcast || rmsg.key.remoteJid.endsWith('@newsletter'),
         timestamp: rmsg.messageTimestamp?.low || rmsg.messageTimestamp?.high || rmsg.messageTimestamp || Math.floor(Date.now() / 1000)
     }
 
