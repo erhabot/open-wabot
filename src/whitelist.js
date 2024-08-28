@@ -35,17 +35,15 @@ function addWhitelist(user, expiration) {
  * @param {string} user - The user to check.
  * @returns {boolean} - Returns true if the user is whitelisted and not expired, false otherwise.
  */
-function isWhitelist(user) {
+async function isWhitelist(user) {
     if (!config.whitelist) return true;
     if (config.administrator.find(x => x == user)) return true;
     if (config.whitelistUsr.find(x => x == user)) return true;
 
     if (config.whitelistSrv) {
-        const data = { user };
-        const whitelisted = post(config.whitelistSrv, data)
-        .then(response =>  response.data?.whitelisted)
-        .catch(() => false);
-        if (whitelisted) return true;
+        const body = { user };
+        const { data } = await post(config.whitelistSrv, body, {validateStatus: () => true});
+        if (data?.whitelisted) return true;
     }
 
     let expTimestamp = whitelist[user];

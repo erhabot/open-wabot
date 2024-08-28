@@ -15,7 +15,7 @@ const { isWhitelist } = require('./whitelist.js');
  */
 async function message(m, plugins) {
     if (!m.prefix) return;
-    if (!isWhitelist(m.sender.user)) {
+    if (!await isWhitelist(m.sender.user)) {
         if (!m.isGroup) m.reply(config.whitelistMsg);
         return;
     }
