@@ -1,4 +1,4 @@
-const config = require('../config.js')
+const { botName } = require('../config.js')
 
 module.exports = {
     admin: false,
@@ -6,7 +6,7 @@ module.exports = {
     alias: ['m'],
     category: 'info',
     run: async (m, plugins) => {
-        let text = `*<>=====[ ${config.botName} ]=====<>*\nHi *${m.name}*, `;
+        let text = `▌│█║▌║▌║ *${botName}* ║▌║▌║█│▌\nHi *${m.name}*, `;
         text += m.sender.user.startsWith('62')
             ? 'berikut adalah daftar fitur yang tersedia.'
             : 'here is the list of available features.'
@@ -21,12 +21,12 @@ module.exports = {
         for (const category of Object.keys(categories).sort()) {
             text += `\n\n*# ${category.replace(/\b\w/g, match => match.toUpperCase())}*`;
             for (const name of categories[category].sort()) {
-                text += `\n  ${m.prefix+name}`;
+                text += `\n- ${name}`;
             }
         }
 
         // to appreciate the developer please don't lose this credit
-        text += `\n\n> © 2024 - Open Source WhatsApp Bot\n> https://github.com/Ismananda/open-wabot`;
+        text += `\n\n> © Open Source WhatsApp Bot\n> https://github.com/Ismananda/open-wabot`;
         await m.reply(text)
     }
 }
