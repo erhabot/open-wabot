@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+const { execSync } = require('child_process');
 const { format } = require('util');
 
 module.exports = {
@@ -21,14 +21,15 @@ module.exports = {
                 }
                 break;
 
-            case 'exec':
-            case '$':
+            default:
                 if (!m.text) return;
                 await m.reply('Executing...');
-                exec(m.text, async (e, s) => {
-                    if (e) await m.reply(format(e));
-                    if (s) await m.reply(format(s));
-                });
+                try {
+                    data = execSync(m.text);
+                    await m.reply(data.toString());
+                } catch (e) {
+                    await m.reply(e.message)
+                }
                 break;
         }
     }
