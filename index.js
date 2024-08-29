@@ -141,14 +141,14 @@ async function connect() {
 
     // Manage incoming messages
     bot.ev.on('messages.upsert', async msg => {
-        if (msg.type === 'append') return;
         for (let m of msg.messages) {
             saveMessage(m);
+            if (msg.type === 'append') continue;
             m = serialize(m);
             if (!m) continue;
             if (m.key.remoteJid === 'status@broadcast' && config.autoReadSW) {
                 await bot.readMessages([m.key]);
-                return;
+                continue;
             }
 
             if (m.broadcast) continue;

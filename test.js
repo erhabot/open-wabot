@@ -7,15 +7,16 @@ console.log('checking...\n');
 let result = '';
 
 // Loop through each file in the directory
-for (const file of scanDir('.')) {
+for (let file of scanDir('.')) {
     // Skip node_modules directory and files that don't have .js, .cjs, or .mjs extensions
-    if (/^\.\/node_modules|(?<!\.(js|cjs|mjs))$/.test(file)) continue;
+    if (/\/node_modules|(?<!\.(js|cjs|mjs))$/.test(file)) continue;
 
     // Read the file content
     const fileContent = fs.readFileSync(file, 'utf8');
     // Check for syntax errors
     const err = check(fileContent, file);
 
+    file = file.replace(process.cwd(), '');
     if (err) {
         // If there are errors, append them to the result string
         result += '\n' + err;
