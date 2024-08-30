@@ -28,7 +28,7 @@ module.exports = {
                     data = execSync(m.text);
                     await m.reply(data.toString());
                 } catch (e) {
-                    await m.reply(e.message)
+                    await m.reply(e.message);
                 }
                 break;
         }

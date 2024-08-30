@@ -10,7 +10,7 @@
     "test": "node test.js",
     "start": "node controller.js",
     "clear:session": "node src/session.js",
-    "install:plugins": "npm i bot-plugins && ln -s ./node_modules/bot-plugins/config.js ./config.plugin.js",
+    "install:plugins": "npm i bot-plugins@latest && ln -s ./node_modules/bot-plugins/config.js ./config.plugin.js",
     "uninstall:plugins": "cp ./node_modules/bot-plugins/config.js ./data/config.plugin.js && npm un plugins",
     "install:mongo": "npm i baileys-mongodb",
     "uninstall:mongo": "npm un baileys-mongodb",
