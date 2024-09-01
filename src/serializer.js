@@ -59,6 +59,7 @@ function serialize(rmsg) {
 
     let edited = rmsg.message.editedMessage?.message?.protocolMessage;
     let msg = edited?.editedMessage || rmsg.message;
+    msg = msg.documentWithCaptionMessage?.message || msg;
     m.type = getMessageType(msg);
     msg = m.type == 'conversation' ? msg : msg[m.type];
     if (!msg) return;
