@@ -25,6 +25,7 @@ module.exports = {
 		let data;
         const pluginsDir = path.resolve(__dirname, 'pmgr');
 		let filePath = path.join(pluginsDir, `${m.text}.js`);
+		if (!fs.existsSync(pluginsDir)) fs.mkdirSync(pluginsDir, { recursive: true });
         switch (m.cmd) {
             case 'upp': // Upload Plugin
 				if (m.mimetype.endsWith('javascript') && m.quoted?.mimetype?.endsWith('javascript') && !m.quoted?.text) {
