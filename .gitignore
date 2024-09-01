@@ -25,6 +25,7 @@ fireSession.json
 
 # Data directory
 data/
+plugins/pmgr/
 plugins/private/
 
 # Temporary files
