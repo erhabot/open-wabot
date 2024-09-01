@@ -96,7 +96,8 @@ function serialize(rmsg) {
                 },
             };
             msg = getMessage(m.quoted.key.remoteJid, ctx.stanzaId);
-            msg = msg.message ? msg : { message: ctx.quotedMessage };
+            msg = msg.message ? msg.message : ctx.quotedMessage;
+            msg = { message: msg.documentWithCaptionMessage?.message || msg };
             m.quoted.pushName = msg.pushName || userName[ctx.participant];
             m.quoted.message = msg.message;
             m.quoted.timestamp = msg.messageTimestamp || 0;
