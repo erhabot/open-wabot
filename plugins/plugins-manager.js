@@ -15,7 +15,7 @@ module.exports = {
             return await m.reply(text);
 		}
 
-        if (!m.text) {
+        if (!m.text && m.cmd != 'upp') {
 			const text = m.sender.user.startsWith('62')
                 ? `Tolong gunakan perintah ini sesuai format berikut.\n\n${m.prefix+m.cmd} <nama plugins>`
                 : `Please use this command according to the following format.\n\n${m.prefix+m.cmd} <plugins name>`;
@@ -50,7 +50,12 @@ module.exports = {
 				}
 
 				try {
-                    fs.writeFileSync(filePath, data);
+					if (!m.text) {
+						const x = eval(data.toString());
+						filePath = path.join(pluginsDir, `${x.name}.js`);
+					}
+
+                    await fs.writeFileSync(filePath, data);
 					filePath = require.resolve(filePath);
 					delete require.cache[filePath];
                     await m.reply(m.sender.user.startsWith('62') ? `Plugin ${m.text}.js berhasil diunggah!` : `Plugin ${m.text}.js uploaded successfully!`);
@@ -70,7 +75,7 @@ module.exports = {
                 try {
 					data = require.resolve(filePath);
 					delete require.cache[data];
-                    fs.unlinkSync(filePath);
+                    await fs.unlinkSync(filePath);
                     await m.reply(m.sender.user.startsWith('62') ? `Plugin ${m.text}.js berhasil dihapus!` : `Plugin ${m.text}.js removed successfully!`);
                 } catch (err) {
                     await m.reply(m.sender.user.startsWith('62') ? `Gagal menghapus plugin:\n${err.message}` : `Failed to remove plugin:\n${err.message}`);
